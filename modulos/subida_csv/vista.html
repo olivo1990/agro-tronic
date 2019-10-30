@@ -1,0 +1,110 @@
+<style>
+    .load {
+    display:    none;
+    position:   fixed;
+    z-index:    10000000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background-color: rgba( 255, 255, 255, .8 );
+    text-align: center;
+}
+
+.load-content{
+	top: 40%;
+    position: relative;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #f9f7f7;
+    width: 500px;
+    margin: 0 auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 25px;
+    padding-bottom: 20px;
+    color: #000;
+}
+
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.card-body {
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    padding: 1.25rem;
+}
+
+.card-title {
+    margin-bottom: .75rem;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+.text-muted {
+    color: #6c757d!important;
+}
+
+.card-text:last-child {
+    margin-bottom: 0;
+}
+
+</style>
+<div class="load">
+    <div class="load-content">
+        <span style="display: block;" id="textoEspera1">En este momento se está procesando su solicitud...<img src="template/img/loading.gif" border="0" style="position: relative;bottom: 10px;"></span>
+        <span style="display: none;" id="textoEspera2">Se están realizando validaciones...<img src="template/img/loading.gif" border="0" style="position: relative;bottom: 10px;"></span>
+        <span style="display: none;" id="textoEspera3">En un momento terminamos, ten paciencia por favor...<img src="template/img/loading.gif" border="0" style="position: relative;bottom: 10px;"></span>
+        <span style="display: none;" id="textoEspera4">Ya estamos al final del proceso...<img src="template/img/loading.gif" border="0" style="position: relative;bottom: 10px;"></span>
+    </div>
+</div>
+<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-primary">
+        	<div class="panel-heading text-center">
+                <h3 class="panel-title">Parámetros de Carga</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-8 col-md-offset-2">
+                    <label>Por favor indica la finca en la que se realizó el vuelo: </label>
+                    <input class='form-control' id='finca'>
+                </div>
+            </div>
+            <form name="subirArchivo" id="subirArchivo" method="post" action="#">
+                <div class="panel-footer text-center">
+                    <span class="btn btn-primary fileinput-button">
+                        <input id="archivo" type="file" class="ploadImg">
+                        <span>Cargar Archivo</span> <i class="glyphicon glyphicon-upload"></i>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div id = "consolidados"></div>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div id="grafica" style="display: none;">
+            <div id="columnchart_material" style="width: 800px; height: 500px;"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>

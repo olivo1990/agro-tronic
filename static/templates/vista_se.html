@@ -1,0 +1,84 @@
+<!-- El html esta diseñado con hojas de estilo de Bootstrap
+	 Encuentra Documentacion en http://getbootstrap.com/ -->
+<div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-primary">
+            <div class="panel-heading text-center">
+                <h3 class="panel-title">Parametros de Busqueda</h3>
+            </div>
+            <form name="form_busqueda" method="post" id="frm_buscar_rutas" action="#">
+                <div class="panel-body">
+                    
+                    <div class="form-group col-md-4">
+                      <label>Campo Texto: </label>
+                      <input type="text" name="campo_ejemplo" id="campo_ejemplo" class="form-control" placeholder="Campo Ejemplo">
+                    </div>
+                     <div class="form-group col-md-4">
+                        <label>Campo Seleccion: </label>
+                        <select name="select_ejemplo" id="select_ejemplo" class="form-control">
+                          <option value = "">Seleccionar...</option>
+                            <option value = "1">Seleccion 1</option>
+                            <option value = "0">Seleccion 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="panel-footer text-center">
+                    <button type="submit" name="button" id="button" class="btn btn-primary">Buscar</button>
+                    <button type="button" name="btn_crear" id="btn_crear" class="btn">Agregar</button>
+                </div>
+            </form>
+        </div>
+  </div>
+</div>
+<!-- Div que contiene la tabla de consulta.! -->
+<div id="consulta" style="display:none;" class="panel panel-primary">
+      <div class="panel-body">
+           <table id="t_ejemplo" class="table table-hover table-striped dt-responsive nowrap" cellspacing="0" width="100%">
+             <thead>
+                <tr>
+                    <th>HEADER 1</th>
+                    <th>HEADER 2</th>
+                </tr>
+             </thead>
+           </table>
+       </div>
+</div>
+
+<!-- Modal de crear o editar -->
+<div class="modal fade">
+  <div class="modal-dialog"> <!-- modal-sm (modal pequeño) . modal-lg (modal grande) ejm: class="modal-dialog modal-sm" -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="titulo_modal">Titulo Modal</h4>
+      </div>
+      <form method="post" id="frm_ejemplo" action="#">
+      <div class="modal-body adminlist">  
+          <div class="row">
+             <div class ="col-md-12">
+
+                   <div class="form-group col-md-4">
+                      <label>Campo Texto: </label>
+                      <input type="text" name="campo_ejemplo" id="campo_ejemplo" class="form-control" placeholder="Campo Ejemplo">
+                    </div>
+                    <div class="form-group col-md-4">
+                        <label>Campo Seleccion: </label>
+                        <select name="select_ejemplo" id="select_ejemplo" class="form-control">
+                            <option value = "">Seleccionar...</option>
+                            <option value = "1">Seleccion 1</option>
+                            <option value = "0">Seleccion 2</option>
+                        </select>
+                    </div>
+
+              </div> 
+          </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-primary">Guardar</button>
+      </div>
+      </form> 
+    </div>
+  </div>
+</div>
