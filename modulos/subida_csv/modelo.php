@@ -16,6 +16,7 @@ class CargarArchivo {
 		$this->degtorad = 0.01745329;
 		$this->radtodeg = 57.29577951;
 
+		$this->bloque = 200;
 		$this->cont = 0;
 		$this->hectarea = 0;
 		$this->minMetros = 70;
@@ -33,6 +34,7 @@ class CargarArchivo {
 		$nombreArchivo = $archivo['name'];
 		$filas = 0;
 		$idArchivo = 0;
+		$bloqueTemp = $this->bloque;
 
 		/*$sql = "SELECT * FROM subida_archivos WHERE nombre = '$nombreArchivo'";
 		$res = $this->BD->devolver_array($sql);
@@ -48,6 +50,7 @@ class CargarArchivo {
 			$columna3 = $responseCreateTabala["columna3"];
 			$columna4 = $responseCreateTabala["columna4"];
 			$columna5 = $responseCreateTabala["columna5"];
+			$totalFilas = $responseCreateTabala["filas"];
 
 			//$nombrecolumnas = substr($nombrecolumnas, 0, - 1);
 
@@ -68,28 +71,67 @@ class CargarArchivo {
 					$sqlInsertarCsv = "INSERT INTO csv_fumigacion (fecha_unix, lat, lon, lat_gps, long_gps, id_archivo) VALUES ";
 					$sqlInsertarCsvColumnas = "";
 
-					while (($datos = fgetcsv($gestor, 10000,",")) !== FALSE) {
-
-						$filas++;
-
-						if($filas > 1){
-
-							$cadena = "";
-							for ($le=0; $le < strlen($datos[$columna1]); $le++) {
-								$cadena .= $datos[$columna1][$le];
-								if(($le + 1) == 10){
-									$cadena .= ".";
-								}
-							}
-
-							$datos[$columna1] = $cadena;
+					//for ($i=0; $i < ; $i++) { 
+						
+						while (($datos = fgetcsv($gestor, 10000,",")) !== FALSE) {
 							
-							$sqlInsertarCsvColumnas .="('{$datos[$columna1]}', '{$datos[$columna2]}', '{$datos[$columna3]}', '{$datos[$columna4]}', '{$datos[$columna5]}',$idArchivo),";
-								
-						}
-					}
+							$filas++;
 
-					if($sqlInsertarCsvColumnas != ""){
+							if($filas > 1){
+
+								$cadena = "";
+								for ($le=0; $le < strlen($datos[$columna1]); $le++) {
+									$cadena .= $datos[$columna1][$le];
+									if(($le + 1) == 10){
+										$cadena .= ".";
+									}
+								}
+
+								/*echo $filas." - ".$bloqueTemp." - ";
+								$error=1;*/
+
+								if($filas < $bloqueTemp){
+
+									$datos[$columna1] = $cadena;
+									
+									$sqlInsertarCsvColumnas .="('{$datos[$columna1]}', '{$datos[$columna2]}', '{$datos[$columna3]}', '{$datos[$columna4]}', '{$datos[$columna5]}',$idArchivo),";
+
+								}else{
+									if($filas == $bloqueTemp && $totalFilas == $bloqueTemp){
+										$datos[$columna1] = $cadena;
+										
+										$sqlInsertarCsvColumnas .="('{$datos[$columna1]}', '{$datos[$columna2]}', '{$datos[$columna3]}', '{$datos[$columna4]}', '{$datos[$columna5]}',$idArchivo),";
+									}	
+
+									if($sqlInsertarCsvColumnas != ""){
+
+										$sqlInsertarCsvColumnas = substr($sqlInsertarCsvColumnas, 0, - 1);
+										$sqlInsertarCsv .= $sqlInsertarCsvColumnas;
+
+										$resInsert = $this->BD->consultar($sqlInsertarCsv);
+										if(!$resInsert){
+											$error=1;
+										}
+									}
+
+									$bloqueTemp += $this->bloque;
+
+									if($bloqueTemp >= $totalFilas){
+										$bloqueTemp = $totalFilas;
+									}	
+									
+									//$filas--;
+									$sqlInsertarCsv = "INSERT INTO csv_fumigacion (fecha_unix, lat, lon, lat_gps, long_gps, id_archivo) VALUES ";
+									$sqlInsertarCsvColumnas = "";
+								}
+									
+							}
+						}
+
+						# code...
+					//}
+
+					/*if($sqlInsertarCsvColumnas != ""){
 
 						$sqlInsertarCsvColumnas = substr($sqlInsertarCsvColumnas, 0, - 1);
 						$sqlInsertarCsv .= $sqlInsertarCsvColumnas;
@@ -97,7 +139,7 @@ class CargarArchivo {
 						if(!$resInsert){
 							$error=1;
 						}
-					}
+					}*/
 					
 					fclose($gestor);
 				}
@@ -124,10 +166,40 @@ class CargarArchivo {
 					$this->reporteFumigaciones($res[$i]["id_archivo"], $res[$i]["cant"], 0);
 				}
 
+				$bloqueTemp2 = $this->bloque;
+
+				$sqlTemp = "INSERT INTO consolidado_fumigacion_temp (fecha1, fecha2, id1, id2, mt, tiene_hectarea, nro_hectarea, cont, total_registros, id_archivo) VALUES ";
+				$inserts = "";
+
 				if(count($this->arrayFechaHectarea) > 0){
 					for ($i=0; $i < count($this->arrayFechaHectarea); $i++) {
-						$sql = "INSERT INTO consolidado_fumigacion_temp (fecha1, fecha2, id1, id2, mt, tiene_hectarea, nro_hectarea, cont, total_registros, id_archivo) VALUES ('{$this->arrayFechaHectarea[$i]["fecha"]}', '{$this->arrayFechaHectarea[$i]["fecha2"]}' , {$this->arrayFechaHectarea[$i]["id1"]}, {$this->arrayFechaHectarea[$i]["id2"]}, {$this->arrayFechaHectarea[$i]["mt"]}, {$this->arrayFechaHectarea[$i]["tieneHectarea"]}, {$this->arrayFechaHectarea[$i]["nroHectarea"]}, {$this->arrayFechaHectarea[$i]["cont"]}, {$this->arrayFechaHectarea[$i]["totalRegistros"]}, {$this->arrayFechaHectarea[$i]["idArchivo"]})";
-						$resInsertTemp = $this->BD->consultar($sql);
+
+						if($i < $bloqueTemp2){
+							$inserts .= "('{$this->arrayFechaHectarea[$i]["fecha"]}', '{$this->arrayFechaHectarea[$i]["fecha2"]}' , {$this->arrayFechaHectarea[$i]["id1"]}, {$this->arrayFechaHectarea[$i]["id2"]}, {$this->arrayFechaHectarea[$i]["mt"]}, {$this->arrayFechaHectarea[$i]["tieneHectarea"]}, {$this->arrayFechaHectarea[$i]["nroHectarea"]}, {$this->arrayFechaHectarea[$i]["cont"]}, {$this->arrayFechaHectarea[$i]["totalRegistros"]}, {$this->arrayFechaHectarea[$i]["idArchivo"]}),";
+						}else{
+
+							if($i == $bloqueTemp2 && count($this->arrayFechaHectarea) == $bloqueTemp2){
+								$datos[$columna1] = $cadena;
+								
+								$sqlInsertarCsvColumnas .="('{$datos[$columna1]}', '{$datos[$columna2]}', '{$datos[$columna3]}', '{$datos[$columna4]}', '{$datos[$columna5]}',$idArchivo),";
+							}
+
+							if($inserts != ""){
+								$inserts = substr($inserts, 0, - 1);
+								$sqlTemp .=$inserts;
+								$resInsertTemp = $this->BD->consultar($sqlTemp);
+							}
+
+							$bloqueTemp2 += $this->bloque;
+
+							if($bloqueTemp2 >= count($this->arrayFechaHectarea)){
+								$bloqueTemp2 = count($this->arrayFechaHectarea);
+							}
+							//$i--;
+							$sqlTemp = "INSERT INTO consolidado_fumigacion_temp (fecha1, fecha2, id1, id2, mt, tiene_hectarea, nro_hectarea, cont, total_registros, id_archivo) VALUES ";
+							$inserts = "";
+						}
+						
 					}
 
 					return $this->devolverConsolidados();
@@ -299,9 +371,6 @@ class CargarArchivo {
 
 		if (($gestor = fopen($archivo['tmp_name'], "r")) !== FALSE) {
 
-			$sqlCreate = "CREATE TABLE `csv_fumigacion` (
-				`id` int(11) NOT NULL AUTO_INCREMENT,";
-
 			while (($datos = fgetcsv($gestor, 10000,",")) !== FALSE) {
 
 				$filas++;
@@ -336,7 +405,7 @@ class CargarArchivo {
 			fclose($gestor);
 		}
 
-		return array("columna1"=>$columna1,"columna2"=>$columna2,"columna3"=>$columna3,"columna4"=>$columna4,"columna5"=>$columna5);
+		return array("columna1"=>$columna1,"columna2"=>$columna2,"columna3"=>$columna3,"columna4"=>$columna4,"columna5"=>$columna5, "filas"=>$filas);
 	}
 	
 }// Fin clase
