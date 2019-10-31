@@ -1,7 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
-
 include_once("../../config/mainController.php"); // Incluye el Controlador Principal
 include_once("../../modulos/subida_csv/modelo.php");	// Incluye el Modelo.
 $controller = new mainController; // Instancia a la clase MainController
