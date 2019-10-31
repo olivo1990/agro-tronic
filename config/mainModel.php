@@ -17,10 +17,10 @@ class BD {
 
   ////*PRU4 CONSTRUCTOR DE LA CLASE BASE DE DATOS QUE INICIALIZA LAS VARIABLES DE LA CLASE*/
   FUNCTION BD () {
-    $bd = "fumigaciones";
-    $this->servidor = "127.0.0.1:3306";
-    $this->usuario = "root";
-    $this->password = "sasa";
+    $bd = "vjr4j5r60d50rngk";
+    $this->servidor = "enqhzd10cxh7hv2e.cbetxkdyhwsb.us-east-1.rds.amazonaws.com:3306";
+    $this->usuario = "ac0olzl2o5bap52q";
+    $this->password = "yh8fxuvtmaacn42k";
     $this->dtbs = $bd;
   }
 

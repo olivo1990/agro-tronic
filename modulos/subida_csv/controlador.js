@@ -20,6 +20,10 @@ function devolverConsolidados () {
     function (data, textStatus) {
       data = JSON.parse(data);
 
+      if(data.fincas.length == 0 || consolidadosDia.length == 0 || arrayTiempo.length == 0){
+        return;
+      }
+
       armarConsolidadoDia(data);
 
     }
@@ -76,7 +80,7 @@ function subirArchivo() {
       {
 
         datos = JSON.parse(data); 
-
+        
         armarConsolidadoDia(datos);
       
       }

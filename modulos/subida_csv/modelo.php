@@ -296,7 +296,7 @@ class CargarArchivo {
 		$columna3 = "";
 		$columna4 = "";
 		$columna5 = "";
-		
+
 		if (($gestor = fopen($archivo['tmp_name'], "r")) !== FALSE) {
 
 			$sqlCreate = "CREATE TABLE `csv_fumigacion` (
